@@ -1,49 +1,42 @@
 🧠 Dynamic Knowledge Base RAG Chatbot (Streamlit)
-This project implements a Retrieval-Augmented Generation (RAG) chatbot using the Gemini API, featuring a crucial mechanism for dynamically updating its internal knowledge base. This setup simulates how a real-world RAG system can periodically ingest new information and automatically incorporate those facts into its responses, replacing stale data.
-The application is built using Streamlit for the interactive interface and Python for the backend logic and API integration.
+This project demonstrates a dynamic RAG (Retrieval-Augmented Generation) system built using Streamlit and the Gemini API. The key feature is the ability to simulate periodic updates to the internal knowledge base, allowing the chatbot's responses to evolve and remain current with the latest information.
 ✨ Features
- * Dynamic Knowledge Base: Uses Streamlit's session_state to mock a vector database (KB) containing specific facts.
- * Knowledge Management Panel: A sidebar control to manually trigger a knowledge update, simulating a scheduled ETL job.
- * RAG Architecture: Retrieves relevant context from the current KB state before generating a response using the Gemini API.
- * Context Transparency: Displays the context retrieved from the KB for the current query.
- * Exponential Backoff: Implements a retry mechanism for robust API calls.
-🛠 Setup and Requirements
-1. Prerequisites
-You need a valid Google AI API Key to run the language model. You can obtain one from [Google AI Studio].
-2. Dependencies
-The application relies on the following Python packages. You can install them using the provided requirements.txt file:
+ * Dynamic Knowledge Simulation: The application's knowledge base (simulating a Vector DB) can be updated mid-session, changing the context used for generation.
+ * Secure API Handling: The Gemini API Key is loaded securely via an environment variable (GEMINI_API_KEY), ensuring your key is not committed to the repository.
+ * RAG Architecture: The system retrieves the most relevant context from the current knowledge base state before generating a grounded response using Gemini.
+ * Context Transparency: The context used to generate the answer is displayed to show the grounding mechanism in action.
+ * Robust API Calls: Implements exponential backoff for handling potential API rate limits or transient network errors.
+🛠 Repository Files
+To run and deploy this application, your repository requires the following files:
+ * dynamic_knowledge_chatbot.py: The main Streamlit application code.
+ * requirements.txt: Python package dependencies.
+ * .gitignore: Prevents sensitive files (like API keys) from being committed.
+🚀 Setup and Local Run
+1. Installation
+Install the required Python packages:
 pip install -r requirements.txt
 
-(If you don't have the requirements.txt file, run: pip install streamlit requests)
-3. API Key Configuration
-Open the dynamic_knowledge_chatbot.py file and replace the placeholder with your actual key in the API_KEY variable:
-# dynamic_knowledge_chatbot.py
-
-# !!! IMPORTANT !!!
-# Replace "YOUR_GEMINI_API_KEY_HERE" with your actual Gemini API Key.
-API_KEY = "YOUR_GEMINI_API_KEY_HERE" # <-- PASTE YOUR KEY HERE
-# !!! IMPORTANT !!!
-
-🚀 How to Run
- * Save the code as dynamic_knowledge_chatbot.py.
- * Ensure your virtual environment is active and dependencies are installed.
- * Run the Streamlit application from your terminal:
-<!-- end list -->
+2. API Key Configuration (Crucial)
+For security, the application reads the API key from your environment. You must set the GEMINI_API_KEY environment variable before running.
+How to set the variable:
+| Operating System | Command |
+|---|---|
+| macOS / Linux | export GEMINI_API_KEY='YOUR_API_KEY_HERE' |
+| Windows (CMD) | set GEMINI_API_KEY=YOUR_API_KEY_HERE |
+3. Run the App
+Execute the Streamlit script:
 streamlit run dynamic_knowledge_chatbot.py
 
-💡 Usage: Testing the Dynamic Knowledge
-The application starts with "stale" knowledge. Follow these steps to observe the dynamic update in action:
-Step 1: Test the Initial (Stale) Knowledge
-Ask the chatbot one of the following questions:
- * What is the purpose and original deadline for Project Phoenix?
- * When is the annual training deadline, and what subject is it about?
-Expected Result: The chatbot will answer using the initial, outdated facts (e.g., Project Phoenix ends Q3 2024, Security Training).
+This will open the application in your browser.
+💡 Testing the Dynamic Knowledge
+The chatbot is pre-loaded with stale facts. Follow this sequence to witness the knowledge update:
+Step 1: Query the Stale Knowledge
+Ask a question that targets the initial, outdated facts (e.g., What is the purpose and original deadline for Project Phoenix?).
+ * Expected Response: Project Phoenix is due Q3 2024 and is a server infrastructure upgrade.
 Step 2: Trigger the Knowledge Update
- * Navigate to the Knowledge Management sidebar on the left.
+ * Open the Knowledge Management sidebar.
  * Click the 🔄 Trigger Knowledge Update button.
- * Observe the Last KB Update metric change and the Current Knowledge Base Snapshot update.
-Step 3: Test the Updated Knowledge
-Ask the chatbot the same questions again:
- * What is the purpose and original deadline for Project Phoenix?
- * When is the annual training deadline, and what subject is it about?
-Expected Result: The chatbot's response will now be based on the new facts (e.g., Project Phoenix is postponed to Q1 2025, new AI Ethics training deadline is November 15th). This confirms the knowledge base has been successfully updated and is influencing the RAG output.
+ * The Last KB Update metric will change, and the Current Knowledge Base Snapshot will display the new facts (e.g., focusing on "AI Ethics," "Project Aether," and "Q1 2025").
+Step 3: Query the Updated Knowledge
+Ask the same question again.
+ * Expected Response: Project Phoenix is indefinitely postponed with a new deadline of Q1 2025. The chatbot is now grounded on the new information.
