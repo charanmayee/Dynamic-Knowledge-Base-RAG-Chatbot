@@ -3,14 +3,12 @@ import time
 import json
 import random
 import requests 
-import os # <-- NEW: Import the os module to access environment variables
+import os # NEW: Import the os module to access environment variables
 
 # --- Gemini API Configuration ---
 
-# !!! SECURITY UPDATE !!!
 # API_KEY is now read from the environment variable named 'GEMINI_API_KEY'.
-# You MUST set this variable when running the app locally or deploying it.
-API_KEY = os.environ.get("GEMINI_API_KEY") # <-- KEY READ FROM ENVIRONMENT VARIABLE
+API_KEY = os.environ.get("GEMINI_API_KEY") 
 
 # Check if the key is available
 if not API_KEY:
@@ -21,7 +19,7 @@ if not API_KEY:
 else:
     API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key={API_KEY}"
 
-# --- Constants and Prompts (rest of the file remains the same) ---
+# --- Constants and Prompts ---
 RAG_SYSTEM_PROMPT = """
 You are a highly knowledgeable and adaptive chatbot. Your primary goal is to answer the user's question ONLY using the provided context (Internal Knowledge Base).
 If the provided context does not contain the answer, state clearly that the information is not available in the current knowledge base.
