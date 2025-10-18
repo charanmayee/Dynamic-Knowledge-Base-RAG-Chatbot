@@ -2,19 +2,26 @@ import streamlit as st
 import time
 import json
 import random
-import requests # Import requests globally for Streamlit access
+import requests 
+import os # <-- NEW: Import the os module to access environment variables
 
-# --- Gemini API Configuration (As required by Canvas environment) ---
+# --- Gemini API Configuration ---
 
-# !!! IMPORTANT !!!
-# Replace "YOUR_GEMINI_API_KEY_HERE" with your actual Gemini API Key.
-# Get your key from Google AI Studio.
-API_KEY = "AIzaSyCbcxLBnvgmKWI8if0GlTZWD-4iJN1e8mk" # <-- PASTE YOUR KEY HERE
-# !!! IMPORTANT !!!
+# !!! SECURITY UPDATE !!!
+# API_KEY is now read from the environment variable named 'GEMINI_API_KEY'.
+# You MUST set this variable when running the app locally or deploying it.
+API_KEY = os.environ.get("GEMINI_API_KEY") # <-- KEY READ FROM ENVIRONMENT VARIABLE
 
-API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key={API_KEY}"
+# Check if the key is available
+if not API_KEY:
+    # Use a placeholder URL if the key is missing to prevent crash, 
+    # but the API call will fail later with a clear error message.
+    API_URL = "https://generativelanguage.googleapis.com/v1beta/models/missing_key:generateContent"
+    
+else:
+    API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key={API_KEY}"
 
-# --- Constants and Prompts ---
+# --- Constants and Prompts (rest of the file remains the same) ---
 RAG_SYSTEM_PROMPT = """
 You are a highly knowledgeable and adaptive chatbot. Your primary goal is to answer the user's question ONLY using the provided context (Internal Knowledge Base).
 If the provided context does not contain the answer, state clearly that the information is not available in the current knowledge base.
@@ -102,8 +109,8 @@ def generate_rag_response(query, context):
     """
     Calls the Gemini API with the retrieved context for grounded generation.
     """
-    if API_KEY == "YOUR_GEMINI_API_KEY_HERE" or not API_KEY:
-        return "ERROR: API Key is missing. Please set your Gemini API Key in the script."
+    if not API_KEY:
+        return "ERROR: Gemini API Key not found. Please set the 'GEMINI_API_KEY' environment variable."
 
     full_prompt = (
         f"Context from Internal Knowledge Base:\n{context}\n\n"
