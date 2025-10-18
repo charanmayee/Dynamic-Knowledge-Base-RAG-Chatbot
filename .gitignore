@@ -1,1 +1,7 @@
-[Immersive content redacted for brevity.]
+Python
+pycache/
+*.pyc
+.venv/
+env/
+venv/
+.streamlit/secrets.toml # Prevents Streamlit secrets from being committed
